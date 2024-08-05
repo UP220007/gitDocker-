@@ -1,4 +1,7 @@
 CREATE DATABASE IF NOT EXISTS task_management;
+DROP TABLE IF EXISTS `projects`;
+DROP TABLE IF EXISTS `tasks`;
+DROP TABLE IF EXISTS `users`;
 
 CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin';
 GRANT ALL PRIVILEGES ON task_management.* TO 'admin'@'localhost';
