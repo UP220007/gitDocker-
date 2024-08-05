@@ -1,4 +1,5 @@
 FROM node:20.14.0 as build-stage
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
