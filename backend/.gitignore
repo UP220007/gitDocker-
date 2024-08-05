@@ -1,11 +1,11 @@
 # Directorios de construcción
-/build/
+#/build/
 /out/
 /target/
 
 # Archivos de Gradle
 .gradle
-/build
+#/build
 
 # Archivos específicos del sistema operativo
 .DS_Store
@@ -20,7 +20,7 @@ Thumbs.db
 /.project
 /.classpath
 /.settings/
-/bin/
+#/bin/
 /nbproject/private/
 
 # Archivos de logs
@@ -33,7 +33,7 @@ Thumbs.db
 .env
 
 # Dependencias
-/lib/
+#/lib/
 /.libs/
 /node_modules/
 /yarn.lock
@@ -64,7 +64,7 @@ Thumbs.db
 /.idea/
 /target/
 /out/
-/build/
+#/build/
 
 # Archivos de configuración del sistema operativo
 .DS_Store
@@ -92,7 +92,7 @@ nbproject/private/
 
 # Dependencias descargadas por Gradle
 .gradle/
-/build/
+#/build/
 
 # Archivos de cache de Gradle
 .gradle/cache/
