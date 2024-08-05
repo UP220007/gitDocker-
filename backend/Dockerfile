@@ -2,7 +2,7 @@ FROM openjdk:22-jdk-slim
 VOLUME /tmp
 EXPOSE 8080
 
-ARG JAR_FILE=build/libs/*.jar
+ARG JAR_FILE=build2/libs/*.jar
 COPY ${JAR_FILE} app.jar
 
 # Install default-mysql-client
