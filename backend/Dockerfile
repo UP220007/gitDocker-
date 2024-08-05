@@ -1,19 +1,15 @@
-FROM openjdk:17-alpine
-#VOLUME /tmp
+FROM openjdk:22-jdk-slim
+VOLUME /tmp
 EXPOSE 8080
 
-#ARG JAR_FILE=target/*.jar
+ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} app.jar
 
-# Instalar mysql-client
-RUN apk update && apk add mysql-client
+# Install default-mysql-client
+RUN apt-get update && apt-get install -y default-mysql-client
 
-# Agregar el script wait-for-it
-COPY wait-for-it.sh /wait-for-it.sh
-RUN chmod +x /wait-for-it.sh
-
-# Crear y usar un usuario no root
-RUN addgroup -S spring && adduser -S spring -G spring
+# Crear un grupo y un usuario para Spring
+RUN addgroup --system spring && adduser --system spring --ingroup spring
 USER spring:spring
 
-ENTRYPOINT ["/wait-for-it.sh", "db:3306", "--", "java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "/app.jar"]

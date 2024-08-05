@@ -1,61 +1,45 @@
-version: "3.8"
-
+version: '3.8'
 services:
-  db:
-    build: ./db
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: task_management
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: admin
-    ports:
-      - "3306:3306"
-    volumes:
-      - db_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "--silent"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-
-  api:
-    build: ./backend
-    ports:
-      - "8080:8080"
-    depends_on:
-      - db
-    environment:
-      DB_HOST: db
-      DB_USER: admin
-      DB_PASSWORD: admin
-      DB_NAME: task_management
-    volumes:
-      - ./backend:/app
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://143.198.60.20:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-
   frontend:
-    build: ./frontend
+    build: frontend
     ports:
-      - "3000:3000"
+      - "3000:${FRONTEND_PORT}"
     depends_on:
-      - api
-    volumes:
-      - ./frontend:/app
+      - backend
     environment:
-      NODE_ENV: production
-    deploy:
-      resources:
-        limits:
-          memory: 1g
+      VITE_API_URL: http://localhost:3000
+
+  backend:
+    build: backend
+    ports:
+      - "8080:${BACKEND_PORT}"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_HOST: db
+    entrypoint: ["java", "-jar", "/app.jar"]
+
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:${MYSQL_PORT}"
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql-data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://143.198.60.20:3000"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "db"]
       interval: 30s
       timeout: 10s
       retries: 5
 
 volumes:
-  db_data:
+  mysql-data:
